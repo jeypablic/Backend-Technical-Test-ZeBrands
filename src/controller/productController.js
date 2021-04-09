@@ -1,8 +1,8 @@
 const UserModel = require('../models/userModel');
-const ProductoModel = require('./../models/productModel');
-const TrackingModel = require('./../models/trackingModel');
+const ProductModel = require('../models/productModel');
+const TrackingModel = require('../models/trackingModel');
 
-const Notificacion = require('./notificacion');
+//const Notificacion = require('../utils/notification');
 
 /**
  * @apiDefine Producto Producto
@@ -22,9 +22,9 @@ const Notificacion = require('./notificacion');
  * @apiParamExample {json} Request-Example:
  *   {
  *      "sku" : "1",
- *      "nombre": "uno",
- *      "marca" : "marca uno",
- *      "precio" : 1000
+ *      "name": "uno",
+ *      "brand" : "marca uno",
+ *      "price" : 1000
  *   }
  *
  * @apiSuccessExample {json} Success-Response:
@@ -34,7 +34,7 @@ const Notificacion = require('./notificacion');
  *   } 
  *
  */
-exports.crear = async (req, res) => {
+exports.save = async (req, res) => {
 
     const model = req.body;
     
@@ -43,22 +43,22 @@ exports.crear = async (req, res) => {
     }
     
     try{
-        const docs = await ProductoModel.findOne({sku : model.sku}).exec();
+        //const docs = await ProductModel.exists({sku : model.sku});
 
-        if(!docs){
-            const prod = new ProductoModel(model);
-            prod.save().then(data => {
+        if(!await ProductModel.exists({sku : model.sku})){
+            const product = new ProductModel(model);
+            product.save().then(data => {
                 res.send({
-                    mensage : 'Producto registrado correctamente'
+                    message : 'Producto registrado correctamente'
                 });
             }).catch(err => {
                 res.status(500).send({
-                    mensaje: err.message || 'Error al intentar guardar el producto'
+                    message: err.message || 'Error al intentar guardar el producto'
                 });
             });
         }else {
             res.send({
-                mensage : 'Producto ya se encuentra registrado'
+                message : 'Producto ya se encuentra registrado'
             });
         }
     }catch(e){
@@ -91,7 +91,7 @@ exports.crear = async (req, res) => {
  *   } 
  *
  */
- exports.editar = async (req, res) => {
+ exports.update = async (req, res) => {
 
     const model = req.body;
 
@@ -101,13 +101,9 @@ exports.crear = async (req, res) => {
     
     try{
         delete model.sku;
-        const producto = await ProductoModel.findOneAndUpdate({sku : req.params.sku}, model, {
+        model['lastUserUpdate'] = req.user.email;
+        await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
             new: true
-        });
-        
-        const usrAdm = await UserModel.find({perfil:1,rut:{$ne : req.user.rut}}).exec();
-        usrAdm.forEach(u => {
-            Notificacion.enviar(u.email, 'Producto actualizado '+producto.sku);
         });
         res.send({message : 'Producto editado correctamente'});
     }catch(e){
@@ -134,16 +130,23 @@ exports.crear = async (req, res) => {
  *   } 
  *
  */
- exports.eliminar = (req, res) => {
+ exports.delete = async (req, res) => {
     
     if(req.user.perfil && req.user.perfil !== 1){
         res.status(401).send({ message: 'No tiene autorización para ejecutar la acción'});    
     }
     
     try{
-        ProductoModel.findOneAndRemove({sku : req.params.sku})
+        const product = await ProductModel.findOneAndUpdate({sku : req.params.sku}, {
+            lastUserUpdate : req.user.email, 
+            deleted : true
+        }, {
+            new: true
+        });
+        res.send(`Producto ${product.sku} fue eliminado`);
+        /*ProductModel.findOneAndRemove({sku : req.params.sku})
             .then(prod => res.send(prod.sku + ' Eliminado correctamente'))
-            .catch(err => res.json(err));
+            .catch(err => res.json(err));*/
     }catch(e){
         console.log(e);
         res.status(500).send(e);
@@ -177,18 +180,18 @@ exports.findBy = async (req, res) => {
     filtro[req.params.atr] = 'precio' === req.params.atr ? parseInt(req.params.valor) : req.params.valor;
     
     try{
-        const docs = await ProductoModel.findOne(filtro).exec();
-        if(docs){
+        const product = await ProductModel.findOne(filtro).exec();
+        if(product){
             if(req.user.perfil && req.user.perfil !== 1){
                 const tracking = new TrackingModel({ 
-                    nombre: 'Consulta Produto', 
-                    codigo: 100, 
-                    sku: docs.sku
+                    name: 'Consulta Produto', 
+                    code: 100, 
+                    sku: product.sku
                 });
                 tracking.save();
             }
             
-            res.send(docs);
+            res.send(product);
         }else {
             res.status(500).send({
                 message: 'Proucto no encontrado.'
@@ -230,9 +233,8 @@ exports.findBy = async (req, res) => {
  */
 exports.findAll = async (req, res) => {
     try{
-        const productos = await ProductoModel.find({}).exec();
-        console.log(productos);
-        res.send(productos);
+        const products = await ProductModel.find({}).exec();
+        res.send(products);
     }catch(e){
         console.log(e);
         res.status(500).send(e.message);
