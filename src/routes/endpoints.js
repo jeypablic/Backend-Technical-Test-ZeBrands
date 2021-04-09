@@ -7,21 +7,21 @@ const auth = require('../auth/auth');
 
 const router = Router();
 
-router.post('/api/user/add', auth, userController.crear);
-router.put('/api/user/edit/:rut', auth, userController.editar);
-router.delete('/api/user/delete/:rut', auth, userController.eliminar);
-router.get('/api/user/find/:atr/:valor', auth, userController.findBy);
-router.get('/api/user/find-all', userController.findAll);
+router.post('/users', auth, userController.crear);
+router.put('/users/:rut', auth, userController.editar);
+router.delete('/users/:rut', auth, userController.eliminar);
+router.get('/users/:atr/:valor', auth, userController.findBy);
+router.get('/users', userController.findAll);
 
-router.post('/api/login', userController.login);
-router.post('/api/logout', auth ,userController.logout);
-router.post('/api/logout-all', auth ,userController.logoutAll);
+router.post('/login', userController.login);
+router.post('/logout', auth ,userController.logout);
+router.post('/logout-all', auth ,userController.logoutAll);
 
-router.post('/api/tracking/add', trackingController.tracking);
+router.post('/tracking/add', trackingController.tracking);
 
-router.post('/api/product/add', auth, productController.save);
-router.put('/api/product/update/:sku', auth, productController.update);
-router.delete('/api/product/delete/:sku', auth, productController.delete);
-router.get('/api/product/find/:atr/:valor', auth, productController.findBy);
-router.get('/api/product/find-all', productController.findAll);
+router.post('/products', auth, productController.save);
+router.put('/products/:sku', auth, productController.update);
+router.delete('/products/:sku', auth, productController.delete);
+router.get('/products/:atr/:valor', auth, productController.findBy);
+router.get('/products', productController.findAll);
 module.exports = router;
