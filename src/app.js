@@ -10,5 +10,5 @@ app.use(express.static(__dirname + '../../doc'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(require('./routes/index'));
+app.use(require('./routes/endpoints'));
 module.exports = app;
