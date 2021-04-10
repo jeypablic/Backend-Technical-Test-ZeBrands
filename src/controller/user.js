@@ -1,4 +1,5 @@
 const UserModel = require('../models/user');
+const bcrypt = require('bcryptjs');
 
 /**
  * @apiDefine Usuario Usuario
@@ -44,6 +45,8 @@ exports.save = async (req, res) => {
         let user = await UserModel.findOne({rut : model.rut}).exec();
         if(!user){
             user = new UserModel(model);
+            user.password = await bcrypt.hash(model.password, 8);
+
             await user.save();
             const token = await user.generateAuthToken();
             res.status(201).send({
