@@ -2,8 +2,9 @@ const nodemailer = require('nodemailer');
 /**
  * Funcion que se encarga de enviar una notificación via email.
  * 
- * @param {*} to destinatario
- * @param {*} message mensaje a enviar
+ * @param {*} to to
+ * @param {*} message Message to send
+ * @param {*} subject Subject to message
  */
 function send(to, message, subject){
 
@@ -26,7 +27,7 @@ function send(to, message, subject){
     if (error) {
       console.log(error);
     } else {
-      console.log('Email enviado: ' + info.response);
+      console.log('Email send: ' + info.response);
     }
   });
 }

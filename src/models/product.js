@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const UserModel = require('../models/userModel');
+const UserModel = require('./user');
 const Notification = require('../utils/notification');
 
 var model = mongoose.Schema({
     sku: {
-        desc: "SKU del producto.",
+        desc: "SKU of the product.",
         trim: true,
         type: String,
         createIndexes: true,
@@ -12,27 +12,27 @@ var model = mongoose.Schema({
         required: true,
     },
     name: {
-        desc: "Nombre del Producto",
+        desc: "Name of the product",
         trim: true,
         require: true,
         type: String
     },
     brand: {
-        desc: "Marca del Producto",
+        desc: "Brand of the product",
         type: String
     },
     price: {
-        desc: "Precio del Producto",
+        desc: "Price of the product",
         require: true,
         type: Number
     },
     lastUserUpdate: {
-        desc: "Usuario que actualiza",
+        desc: "User to Update",
         require: false,
         type: String
     },
     deleted: {
-        desc: "Eliminación Lógica",
+        desc: "Logic Delete",
         require: true,
         default: false,
         type: Boolean
@@ -42,14 +42,20 @@ var model = mongoose.Schema({
 });
 
 model.post('findOneAndUpdate', async function() {   
-    const usrAdm = await UserModel.find({perfil:1, email:{$ne : this._update.$set.lastUserUpdate }}).exec();
-    usrAdm.forEach(u => {
-        
-        let message = `Sr. ${u.name},\n The ${this._update.$set.lastUserUpdate} has updated product SKU ${this._conditions.sku}, the fields updated was ${this._update.$set}`;
+    let literalValues;  
+    const valuesUpdate = this._update.$set;
+    Object.keys(valuesUpdate).forEach(function(key) {
+        literalValues += literalValues? '\n,' : '';
+        literalValues += key + ' : ' + valuesUpdate[key];
+    });
+
+    const usrAdm = await UserModel.find({profile:1, email:{$ne : valuesUpdate.lastUserUpdate }}).exec();
+    usrAdm.forEach(u => {        
+        let message = `Sr. ${u.nombre},\n The ${valuesUpdate.lastUserUpdate} has updated product SKU ${this._conditions.sku}, the fields updated was \n\n ${literalValues}`;
         console.log(message);
         Notification.send(u.email, message, 'Update Product');
     });
 });
 
 const ProductModel =  mongoose.model('product', model);
-module.exports =ProductModel;
+module.exports = ProductModel;

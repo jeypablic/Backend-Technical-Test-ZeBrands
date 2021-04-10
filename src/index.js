@@ -1,16 +1,15 @@
 const { listen } = require('./app');
 const app = require('./app');
-const UserModel = require('./models/userModel');
+const UserModel = require('./models/user');
 
 async function main() {
     await app.listen(3000);
-    console.log('server iniciado');
+    console.log('server started');
     const model = {
         rut : "1-9",
-        nombre : "Administrador",
-        aPaterno : "Zbrands",
-        aMaterno : "luuna",
-        perfil : 1,
+        name : "Administrador",
+        lastName : "Zbrands Luuna",
+        profile : 1,
         email : "test@gmail.com",
         password : "adm1234" 
     };
@@ -27,9 +26,9 @@ async function main() {
         token = await user.generateAuthToken();
     }
     
-    console.log('Usuario administrador creado');
-    console.log('usr:', model.email);
-    console.log('pass:', model.password);
+    console.log('Admin user created');
+    console.log('user:', model.email);
+    console.log('password:', model.password);
 
 }
 

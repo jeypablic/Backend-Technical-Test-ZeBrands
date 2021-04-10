@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGO_URI, {
     useFindAndModify: false,
     useCreateIndex: true
 }).then(db => {
-    console.log('DB conectada a ', db.connection.host);
+    console.log('DB connected to ', db.connection.host);
 
 }).catch(err => console.error(err));
 

@@ -1,11 +1,11 @@
 {
   "name": "zebrans",
   "version": "0.0.1",
-  "description": "Api para sistema de catálogo básico para administrar productos",
+  "description": "Api for basic catalog system to manage products",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jeypablic/zebrands.git"
+    "url": "https://github.com/jeypablic/Backend-Technical-Test-ZeBrands.git"
   },
   "scripts": {
     "start": "node src/index.js",
@@ -13,7 +13,7 @@
     "dev": "node src/index.js",
     "start-nodemon": "env-cmd -f ./.env nodemon src / app.js apidoc -i src/ -o doc/"
   },
-  "keywords": [],
+  "keywords": ["nodejs", "express", "nodemon", "docker", "docker-compose", "mongoose", "morgan", "jsonwebtoken", "nodemailer"],
   "author": "Juan Pablo Rodriguez",
   "license": "ISC",
   "dependencies": {
