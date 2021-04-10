@@ -11,9 +11,20 @@
     "start": "node src/index.js",
     "document": "apidoc -i src/ -o doc/",
     "dev": "node src/index.js",
-    "start-nodemon": "env-cmd -f ./.env nodemon src / app.js apidoc -i src/ -o doc/"
+    "start-nodemon": "env-cmd -f ./.env nodemon src / app.js apidoc -i src/ -o doc/",
+    "test": "mocha tests/api.test.js --exit"
   },
-  "keywords": ["nodejs", "express", "nodemon", "docker", "docker-compose", "mongoose", "morgan", "jsonwebtoken", "nodemailer"],
+  "keywords": [
+    "nodejs",
+    "express",
+    "nodemon",
+    "docker",
+    "docker-compose",
+    "mongoose",
+    "morgan",
+    "jsonwebtoken",
+    "nodemailer"
+  ],
   "author": "Juan Pablo Rodriguez",
   "license": "ISC",
   "dependencies": {
@@ -22,10 +33,12 @@
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^8.3.2",
     "mongoose": "^5.12.2",
     "morgan": "^1.10.0",
     "nodemailer": "^6.5.0",
     "path": "^0.12.7",
+    "supertest": "^6.1.3",
     "validator": "^13.5.2"
   },
   "devDependencies": {
