@@ -38,6 +38,6 @@ const TrackingModel = require('./../models/trackingModel');
 
     tracking.save(function (err, item) {
         if (err) return console.error(err);
-        res.send({menssage : 'Registro guardado correctamente'});
+        res.send({menssage : 'Tracking successfully registered'});
     });
 }

@@ -36,17 +36,15 @@ exports.save = async (req, res) => {
 
     const model = req.body;
     
-    if(req.user.perfil && req.user.perfil !== 1){
+    if(req.user.profile && req.user.profile !== 1){
         res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
-        //const docs = await ProductModel.exists({sku : model.sku});
-
         if(!await ProductModel.exists({sku : model.sku})){
             const product = new ProductModel(model);
             product.save().then(data => {
-                res.send({
+                res.status(201).send({
                     message : 'Product successfully registered'
                 });
             }).catch(err => {
@@ -93,7 +91,7 @@ exports.save = async (req, res) => {
 
     const model = req.body;
 
-    if(req.user.perfil && req.user.perfil !== 1){
+    if(req.user.profile && req.user.profile !== 1){
         res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
@@ -130,7 +128,7 @@ exports.save = async (req, res) => {
  */
  exports.delete = async (req, res) => {
     
-    if(req.user.perfil && req.user.perfil !== 1){
+    if(req.user.profile && req.user.profile !== 1){
         res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
@@ -142,9 +140,6 @@ exports.save = async (req, res) => {
             new: true
         });
         res.send({message : `Product ${product.sku} was successfully removed`});
-        /*ProductModel.findOneAndRemove({sku : req.params.sku})
-            .then(prod => res.send(prod.sku + ' Eliminado correctamente'))
-            .catch(err => res.json(err));*/
     }catch(e){
         console.log(e);
         res.status(500).send(e);
@@ -180,7 +175,7 @@ exports.findBy = async (req, res) => {
     try{
         const product = await ProductModel.findOne(filtro).exec();
         if(product){
-            if(req.user.perfil && req.user.perfil !== 1){
+            if(req.user.profile && req.user.profile !== 1){
                 const tracking = new TrackingModel({ 
                     name: 'Consulta Produto', 
                     code: 100, 

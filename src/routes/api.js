@@ -3,6 +3,7 @@ const db = require('../db/database');
 const userController = require('../controller/userController');
 const productController = require('../controller/productController');
 const trackingController = require('../controller/trackingController');
+const loginController = require('../controller/login');
 const auth = require('../auth/auth');
 
 const router = Router();
@@ -13,9 +14,9 @@ router.delete('/users/:rut', auth, userController.eliminar);
 router.get('/users/:atr/:valor', auth, userController.findBy);
 router.get('/users', userController.findAll);
 
-router.post('/login', userController.login);
-router.post('/logout', auth ,userController.logout);
-router.post('/logout-all', auth ,userController.logoutAll);
+router.post('/login', loginController.login);
+router.post('/logout', auth ,loginController.logout);
+router.post('/logout-all', auth ,loginController.logoutAll);
 
 router.post('/tracking/add', trackingController.tracking);
 

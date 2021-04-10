@@ -49,7 +49,7 @@ model.post('findOneAndUpdate', async function() {
         literalValues += key + ' : ' + valuesUpdate[key];
     });
 
-    const usrAdm = await UserModel.find({perfil:1, email:{$ne : valuesUpdate.lastUserUpdate }}).exec();
+    const usrAdm = await UserModel.find({profile:1, email:{$ne : valuesUpdate.lastUserUpdate }}).exec();
     usrAdm.forEach(u => {        
         let message = `Sr. ${u.nombre},\n The ${valuesUpdate.lastUserUpdate} has updated product SKU ${this._conditions.sku}, the fields updated was \n\n ${literalValues}`;
         console.log(message);
