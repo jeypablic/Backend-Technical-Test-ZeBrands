@@ -1,4 +1,4 @@
-# zebrands
+# Zebrands
 Resolución de Prueba Zebrands - Luuna
 
 ## Descripción
@@ -31,16 +31,16 @@ docker-compose up
 úna vez iniciado el contenedor, se visualizara el siguiente mensaje en el terminal:
 
 ```
-backend  | [nodemon] 2.0.7
-backend  | [nodemon] to restart at any time, enter `rs`
-backend  | [nodemon] watching path(s): *.*
-backend  | [nodemon] watching extensions: js,mjs,json
-backend  | [nodemon] starting `node src / app.js apidoc -o doc/`
-backend  | server iniciado
-backend  | DB conectada a  mongo
-backend  | Usuario administrador creado
-backend  | usr: test@gmail.com
-backend  | password: adm1234
+backend | [nodemon] 2.0.7
+backend | [nodemon] to restart at any time, enter `rs`
+backend | [nodemon] watching path (s): *. *
+backend | [nodemon] watching extensions: js, mjs, json
+backend | [nodemon] starting `node src / app.js apidoc -o doc /`
+backend | server started
+backend | DB connected to mongo
+backend | Admin user created
+backend | user: test@gmail.com
+backend | password: adm1234
 ```
 
 Este mensaje nos indica que ya se encuentra disponible, y despliega los datos del primer usuario creado, que se necesitará para la interacción de la API
