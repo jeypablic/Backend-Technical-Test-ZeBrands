@@ -1,68 +1,68 @@
-# zebrands
-Resolución de Prueba Zebrands - Luuna
+#zebrands
+Zebrands Test Resolution - Luuna
 
-## Descripción
+## Description
 
-Desarrollo de API Rest para el manejo de un catalogo de productos.
+Development of API Rest for managing a product catalog.
 
-### Pre-requisitos
+### Pre requirements
 
-Para la ejecucion de este sistema, es necesario contar con la instalacion de docker en el equipo donde se ejecutara.
+To run this system, it is necessary to have docker installed on the computer where it will run.
 
-Ademas de contar con el software Postman, con la finalidad de ejecutar las llamadas a las API REST.
+In addition to having the Postman software, in order to execute the calls to the REST APIs.
 
-### Construido con
+### Built with
 
-* [NodeJs](https://nodejs.org/es/) - Entorno de ejecución 
-* [Express](https://expressjs.com/es/) - Infrestructura para aplicaciones web NodeJs
-* [Docker](https://docker.com) - Para la contenerización de la aplicación
-* [MongoDB](https://mongodb.com) - Base de datos no relacional
-* [Postman](https://www.postman.com/) - Para la ejecucion de las APIs
+* [NodeJs] (https://nodejs.org/es/) - Execution environment
+* [Express] (https://expressjs.com/es/) - Infrastructure for NodeJs web applications
+* [Docker] (https://docker.com) - For application containerization
+* [MongoDB] (https://mongodb.com) - Non-relational database
+* [Postman] (https://www.postman.com/) - For the execution of the APIs
 
-### Ejecución
+### Execution
 
-Para la ejecución de este contenedor se realiza con las siguientes instrucciones en un terminal (CMD para Windows):
+To execute this container, it is done with the following instructions in a terminal (CMD for Windows):
 
 ```
 docker-compose build
 docker-compose up
 ```
 
-úna vez iniciado el contenedor, se visualizara el siguiente mensaje en el terminal:
+Once the container is started, the following message will be displayed on the terminal:
 
 ```
-backend  | [nodemon] 2.0.7
-backend  | [nodemon] to restart at any time, enter `rs`
-backend  | [nodemon] watching path(s): *.*
-backend  | [nodemon] watching extensions: js,mjs,json
-backend  | [nodemon] starting `node src / app.js apidoc -o doc/`
-backend  | server iniciado
-backend  | DB conectada a  mongo
-backend  | Usuario administrador creado
-backend  | usr: test@gmail.com
-backend  | pass: adm1234
+backend | [nodemon] 2.0.7
+backend | [nodemon] to restart at any time, enter `rs`
+backend | [nodemon] watching path (s): *. *
+backend | [nodemon] watching extensions: js, mjs, json
+backend | [nodemon] starting `node src / app.js apidoc -o doc /`
+backend | server started
+backend | DB connected to mongo
+backend | Admin user created
+backend | user: test@gmail.com
+backend | password: adm1234
 ```
 
-Este mensaje nos indica que ya se encuentra disponible, y despliega los datos del primer usuario creado, que se necesitará para la interacción de la API
+This message tells us that it is already available, and displays the data of the first user created, which will be needed for the API interaction
 
-En un navegador de preferencia, entre a la siguiente URL.
+In a preferred browser, enter the following URL.
 
 ```
-http://localhost:7000
+http: // localhost: 7000
 ```
 
-Se desplegará la documentación de la API REST.
+The REST API documentation will be displayed.
 
-Para la ejecucion de cada API, se debe utilizar el software Postman e importar el archivo que se encuentra en este repositorio, en la siguiente ruta:
+For the execution of each API, you must use the Postman software and import the file found in this repository, in the following path:
 
 ```
 ./postman-examples/zebrands.postman_collection.json
 ```
 
-Al cargar este archivo, Postman quedara configurado con cada una de las solicitudes a la API, con datos de pruebas.
+By loading this file, Postman will be configured with each of the requests to the API, with test data.
 
-Para comenzar a utilizar la API desde el Postman, se debe ejecutar la api de login, con las credenciales entregadas en la consola del docker.
+To start using the API from Postman, you must run the login api, with the credentials provided in the docker console.
 
-Esto les respondera los datos del usuario y los token de acceso, uno de ello, se debe utilizar en la pestaña Authorizations, seleccinando el typo de autorización "Bearer Token", y pegar el token que se obtuvo en el login.
+This will respond to the user data and the access tokens, one of which must be used in the Authorizations tab, selecting the authorization type "Bearer Token", and paste the token obtained at login.
 
-Para la ejecución de todas las APIs de debe cargar el tocken.
+For the execution of all the APIs the tocken must be loaded.
