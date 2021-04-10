@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const UserModel = require('./../models/userModel');
+const UserModel = require('../models/user');
 /**
  * Metodo que se encarga de la autenticación del usuario en el sistema
  * 
@@ -20,10 +20,10 @@ const auth = async(req, res, next) => {
             req.token = token;
             next()
         } catch (error) {
-            res.status(401).send({ error: 'No tiene autorización para esta consulta' })
+            res.status(401).send({ error: 'You are not authorized to execute the action' })
         }
     }else{
-        res.status(401).send({message: 'Debe iniciar Sesión'});
+        res.status(401).send({message: 'You must log in'});
     }
 }
 module.exports = auth;

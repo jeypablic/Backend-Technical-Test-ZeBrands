@@ -1,8 +1,6 @@
-const UserModel = require('../models/userModel');
-const ProductoModel = require('./../models/productModel');
-const TrackingModel = require('./../models/trackingModel');
-
-const Notificacion = require('./notificacion');
+const UserModel = require('../models/user');
+const ProductModel = require('../models/product');
+const TrackingModel = require('../models/tracking');
 
 /**
  * @apiDefine Producto Producto
@@ -13,7 +11,7 @@ const Notificacion = require('./notificacion');
 /**
  * @api {post} /add Registrar un Producto
  * @apiPermission admin
- * @apiVersion 0.0.1
+ * @apiVersion v1
  * @apiName Producto
  * @apiGroup Producto 
  *
@@ -22,9 +20,9 @@ const Notificacion = require('./notificacion');
  * @apiParamExample {json} Request-Example:
  *   {
  *      "sku" : "1",
- *      "nombre": "uno",
- *      "marca" : "marca uno",
- *      "precio" : 1000
+ *      "name": "uno",
+ *      "brand" : "marca uno",
+ *      "price" : 1000
  *   }
  *
  * @apiSuccessExample {json} Success-Response:
@@ -34,31 +32,30 @@ const Notificacion = require('./notificacion');
  *   } 
  *
  */
-exports.crear = async (req, res) => {
+exports.save = async (req, res) => {
 
     const model = req.body;
     
-    if(req.user.perfil && req.user.perfil !== 1){
-        res.status(401).send({ message: 'No tiene autorización para ejecutar la acción'});    
+    if(req.user.profile && req.user.profile !== 1){
+        res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
-        const docs = await ProductoModel.findOne({sku : model.sku}).exec();
-
-        if(!docs){
-            const prod = new ProductoModel(model);
-            prod.save().then(data => {
-                res.send({
-                    mensage : 'Producto registrado correctamente'
+        if(!await ProductModel.exists({sku : model.sku})){
+            model['lastUserUpdate'] = req.user.email;
+            const product = new ProductModel(model);
+            product.save().then(data => {
+                res.status(201).send({
+                    message : 'Product successfully registered'
                 });
             }).catch(err => {
                 res.status(500).send({
-                    mensaje: err.message || 'Error al intentar guardar el producto'
+                    message: err.message || 'Error trying to save the product'
                 });
             });
         }else {
             res.send({
-                mensage : 'Producto ya se encuentra registrado'
+                message : 'Product is already registered'
             });
         }
     }catch(e){
@@ -69,7 +66,7 @@ exports.crear = async (req, res) => {
 
 /**
  * @api {put} /edit/1 Editar un Producto
- * @apiVersion 0.0.1
+ * @apiVersion v1
  * @apiName Producto
  * @apiGroup Producto
  * @apiPermission admin
@@ -91,25 +88,21 @@ exports.crear = async (req, res) => {
  *   } 
  *
  */
- exports.editar = async (req, res) => {
+ exports.update = async (req, res) => {
 
     const model = req.body;
 
-    if(req.user.perfil && req.user.perfil !== 1){
-        res.status(401).send({ message: 'No tiene autorización para ejecutar la acción'});    
+    if(req.user.profile && req.user.profile !== 1){
+        res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
         delete model.sku;
-        const producto = await ProductoModel.findOneAndUpdate({sku : req.params.sku}, model, {
+        model['lastUserUpdate'] = req.user.email;
+        await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
             new: true
         });
-        
-        const usrAdm = await UserModel.find({perfil:1,rut:{$ne : req.user.rut}}).exec();
-        usrAdm.forEach(u => {
-            Notificacion.enviar(u.email, 'Producto actualizado '+producto.sku);
-        });
-        res.send({message : 'Producto editado correctamente'});
+        res.send({message : 'Product updated successfully'});
     }catch(e){
         console.log(e);
         res.status(500).send(e.message);
@@ -118,7 +111,7 @@ exports.crear = async (req, res) => {
 
 /**
  * @api {delete} /delete/1 Eliminar Producto
- * @apiVersion 0.0.1
+ * @apiVersion v1
  * @apiName Producto
  * @apiGroup Producto
  * @apiPermission admin
@@ -134,16 +127,20 @@ exports.crear = async (req, res) => {
  *   } 
  *
  */
- exports.eliminar = (req, res) => {
+ exports.delete = async (req, res) => {
     
-    if(req.user.perfil && req.user.perfil !== 1){
-        res.status(401).send({ message: 'No tiene autorización para ejecutar la acción'});    
+    if(req.user.profile && req.user.profile !== 1){
+        res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
-        ProductoModel.findOneAndRemove({sku : req.params.sku})
-            .then(prod => res.send(prod.sku + ' Eliminado correctamente'))
-            .catch(err => res.json(err));
+        const product = await ProductModel.findOneAndUpdate({sku : req.params.sku}, {
+            lastUserUpdate : req.user.email, 
+            deleted : true
+        }, {
+            new: true
+        });
+        res.send({message : `Product ${product.sku} was successfully removed`});
     }catch(e){
         console.log(e);
         res.status(500).send(e);
@@ -152,7 +149,7 @@ exports.crear = async (req, res) => {
 
 /**
  * @api {get} /findBy/sku/1 Busca un Producto
- * @apiVersion 0.0.1
+ * @apiVersion v1
  * @apiName Producto
  * @apiGroup Producto
  * @apiPermission none
@@ -174,24 +171,24 @@ exports.crear = async (req, res) => {
 exports.findBy = async (req, res) => {
     
     let filtro = {};
-    filtro[req.params.atr] = 'precio' === req.params.atr ? parseInt(req.params.valor) : req.params.valor;
+    filtro[req.params.atr] = 'price' === req.params.atr ? parseInt(req.params.valor) : req.params.valor;
     
     try{
-        const docs = await ProductoModel.findOne(filtro).exec();
-        if(docs){
-            if(req.user.perfil && req.user.perfil !== 1){
+        const product = await ProductModel.findOne(filtro).exec();
+        if(product){
+            if(req.user.profile && req.user.profile !== 1){
                 const tracking = new TrackingModel({ 
-                    nombre: 'Consulta Produto', 
-                    codigo: 100, 
-                    sku: docs.sku
+                    name: 'Consulta Produto', 
+                    code: 100, 
+                    sku: product.sku
                 });
                 tracking.save();
             }
             
-            res.send(docs);
+            res.send(product);
         }else {
             res.status(500).send({
-                message: 'Proucto no encontrado.'
+                message: 'Prouct not found.'
             })
         }
     }catch(e){
@@ -201,8 +198,8 @@ exports.findBy = async (req, res) => {
 }
 
 /**
- * @api {post} /findAll Lista los Producto
- * @apiVersion 0.0.1
+ * @api {get} /findAll Lista los Producto
+ * @apiVersion v1
  * @apiName Producto
  * @apiGroup Producto
  * @apiPermission none
@@ -230,9 +227,14 @@ exports.findBy = async (req, res) => {
  */
 exports.findAll = async (req, res) => {
     try{
-        const productos = await ProductoModel.find({}).exec();
-        console.log(productos);
-        res.send(productos);
+        let filter = {};
+        if(req.user.profile && req.user.profile !== 1){
+            filter = {
+                delete: false
+            };
+        }
+        const products = await ProductModel.find(filter).exec();
+        res.send(products);
     }catch(e){
         console.log(e);
         res.status(500).send(e.message);

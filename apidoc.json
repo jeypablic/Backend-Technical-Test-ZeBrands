@@ -1,7 +1,7 @@
 {
-    "name": "ZeBrands Api Documentación",
+    "name": "ZeBrands Api Documentation",
     "version": "0.0.1",
-    "description": "Documentación para la API REST",
+    "description": "Documentation for API REST",
     "title": "ZeBrands ApiDoc",
     "url" : "https://localhost:7000",
     "sampleUrl": "https://localhost:7000",
