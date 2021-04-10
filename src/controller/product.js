@@ -1,6 +1,6 @@
-const UserModel = require('../models/userModel');
-const ProductModel = require('../models/productModel');
-const TrackingModel = require('../models/trackingModel');
+const UserModel = require('../models/user');
+const ProductModel = require('../models/product');
+const TrackingModel = require('../models/tracking');
 
 /**
  * @apiDefine Producto Producto
@@ -42,6 +42,7 @@ exports.save = async (req, res) => {
     
     try{
         if(!await ProductModel.exists({sku : model.sku})){
+            model['lastUserUpdate'] = req.user.email;
             const product = new ProductModel(model);
             product.save().then(data => {
                 res.status(201).send({
@@ -226,7 +227,13 @@ exports.findBy = async (req, res) => {
  */
 exports.findAll = async (req, res) => {
     try{
-        const products = await ProductModel.find({}).exec();
+        let filter = {};
+        if(req.user.profile && req.user.profile !== 1){
+            filter = {
+                delete: false
+            };
+        }
+        const products = await ProductModel.find(filter).exec();
         res.send(products);
     }catch(e){
         console.log(e);

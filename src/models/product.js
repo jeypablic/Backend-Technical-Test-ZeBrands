@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserModel = require('../models/userModel');
+const UserModel = require('./user');
 const Notification = require('../utils/notification');
 
 var model = mongoose.Schema({

@@ -1,6 +1,6 @@
 const { listen } = require('./app');
 const app = require('./app');
-const UserModel = require('./models/userModel');
+const UserModel = require('./models/user');
 
 async function main() {
     await app.listen(3000);
