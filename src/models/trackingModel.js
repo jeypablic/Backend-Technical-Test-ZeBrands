@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 var model = mongoose.Schema({
-    nombre: {
+    name: {
         desc: "Nombre Acción.",
         trim: true,
         type: String
     },
-    codigo: {
+    code: {
         desc: "Código Acción",
         type: Number
     },
