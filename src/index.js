@@ -1,6 +1,7 @@
 const { listen } = require('./app');
 const app = require('./app');
 const UserModel = require('./models/user');
+const bcrypt = require('bcryptjs');
 
 async function main() {
     await app.listen(3000);
@@ -11,7 +12,7 @@ async function main() {
         lastName : "Zbrands Luuna",
         profile : 1,
         email : "test@gmail.com",
-        password : "adm1234" 
+        password : await bcrypt.hash("adm1234", 8)
     };
     let user = await UserModel.findOne({rut : model.rut}).exec();
     let token;
@@ -28,8 +29,7 @@ async function main() {
     
     console.log('Admin user created');
     console.log('user:', model.email);
-    console.log('password:', model.password);
-
+    console.log('password: adm1234');
 }
 
 main();
