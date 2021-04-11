@@ -12,24 +12,19 @@ async function main() {
         lastName : "Zbrands Luuna",
         profile : 1,
         email : "test@gmail.com",
-        password : await bcrypt.hash("adm1234", 8)
+        password : "adm1234"
     };
     let user = await UserModel.findOne({rut : model.rut}).exec();
     let token;
     if(!user){
         user = new UserModel(model);
         await user.save();
-        token = await user.generateAuthToken();
-    }else{
-        user = await UserModel.findOneAndUpdate({rut : model.rut}, model, {
-            new: true
-        });
-        token = await user.generateAuthToken();
     }
-    
+
+    token = await user.generateAuthToken();
     console.log('Admin user created');
     console.log('user:', model.email);
-    console.log('password: adm1234');
+    console.log('password:', model.password);
 }
 
 main();
