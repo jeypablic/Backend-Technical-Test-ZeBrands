@@ -76,7 +76,7 @@ model.pre('save', async function (next) {
 });
 
 /**
- * Metodo encargado de generar los token de autorizacion para el usuario.
+ * Method in charge of generating authorization tokens for the user.
  */
 model.methods.generateAuthToken = async function() {
     const user = this;
@@ -87,7 +87,7 @@ model.methods.generateAuthToken = async function() {
 }
 
 /**
- * Se encarga de buscar al usario por las credenciales de login
+ * It is responsible for searching the user by the login credentials
  * 
  * @param {*} email 
  * @param {*} password 

@@ -1,27 +1,27 @@
 const UserModel = require('../models/user');
+const bcrypt = require('bcryptjs');
 
 /**
  * @apiDefine Usuario Usuario
  *
- * API necesaria para gestionar los usuarios.
+ * API required to manage users.
  */
 
 /**
- * @api {post} /add Registrar un Usuario
+ * @api {post} / Register a User
  * @apiPermission admin
  * @apiVersion 0.0.1
- * @apiName Usuario
- * @apiGroup Usuario 
+ * @apiName Users
+ * @apiGroup Users 
  *
- * @apiDescription Se encarga de registrar un usuario del sistema.
+ * @apiDescription It is responsible for registering a user of the system.
  *
  * @apiParamExample {json} Request-Example:
  *   {
  *      "rut" : "18-0",
- *      "nombre" : "Administrador",
- *      "aPaterno" : "Zbrands",
- *      "aMaterno" : "luuna",
- *      "perfil" : 1,
+ *      "name" : "Administrador",
+ *      "lastName" : "Zbrands",
+ *      "profile" : 1,
  *      "email" : "jtest@gmail.com",
  *      "password" : "adm1234"
  *   }
@@ -29,7 +29,7 @@ const UserModel = require('../models/user');
  * @apiSuccessExample {json} Success-Response:
  *   HTTP/1.1 200 OK
  *   {
- *      "message" : "Usuario registrado correctamente"
+ *      "message" : "User successfully registered"
  *   } 
  *
  */
@@ -44,6 +44,7 @@ exports.save = async (req, res) => {
         let user = await UserModel.findOne({rut : model.rut}).exec();
         if(!user){
             user = new UserModel(model);
+
             await user.save();
             const token = await user.generateAuthToken();
             res.status(201).json({
@@ -59,21 +60,20 @@ exports.save = async (req, res) => {
 }
 
 /**
- * @api {put} /edit/1 Editar un Usuario
+ * @api {put} /1 Edit a User
  * @apiVersion 0.0.1
- * @apiName Usuario
- * @apiGroup Usuario
+ * @apiName Users
+ * @apiGroup Users
  * @apiPermission admin
  *
- * @apiDescription Se encarga de editar un usuario del sistema.
+ * @apiDescription It is in charge of editing a system user.
  *
  * @apiParamExample {json} Request-Example:
  *   {
  *      "rut" : "18-0",
- *      "nombre" : "Administrador",
- *      "aPaterno" : "Zbrands",
- *      "aMaterno" : "luuna",
- *      "perfil" : 1,
+ *      "name" : "Administrador",
+ *      "lastName" : "Zbrands",
+ *      "profile" : 1,
  *      "email" : "jtest@gmail.com",
  *      "password" : "adm1234"
  *   }
@@ -81,7 +81,7 @@ exports.save = async (req, res) => {
  * @apiSuccessExample {json} Success-Response:
  *   HTTP/1.1 200 OK
  *   {
- *      "message" : "Usuario editado correctamente"
+ *      "message" : "User updated successfully"
  *   } 
  *
  */
@@ -111,20 +111,20 @@ exports.save = async (req, res) => {
 }
 
 /**
- * @api {delete} /delete/1 Eliminar Usuario
+ * @api {delete} /1 Delete User
  * @apiVersion 0.0.1
- * @apiName Usuario
- * @apiGroup Usuario
+ * @apiName Users
+ * @apiGroup Users
  * @apiPermission admin
  *
- * @apiDescription Se encarga de eliminar un usuario del sistema.
+ * @apiDescription It is responsible for removing a user from the system.
  *
- * @apiQuery {String} rut RUT del Usuario
+ * @apiQuery {String} rut User's RUT
  *
  * @apiSuccessExample {json} Success-Response:
  *   HTTP/1.1 200 OK
  *   {
- *      "message" : "Usuario eliminado correctamente"
+ *      "message" : "User 1-9 was successfully removed"
  *   } 
  *
  */
@@ -151,23 +151,23 @@ exports.save = async (req, res) => {
 }
 
 /**
- * @api {get} /findBy/nombre/Administrador Busca un usuario
+ * @api {get} /nombre/Administrador Search for a user
  * @apiVersion 0.0.1
- * @apiName Usuario
- * @apiGroup Usuario
+ * @apiName Users
+ * @apiGroup Users
  * @apiPermission none
  *
- * @apiDescription Se encarga de buscar un usuario por algun parametro indicado
+ * @apiDescription It is in charge of searching for a user by any indicated parameter
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {
  *        "_id": "605e9d2dd0eaaa0033c68b41",
  *        "rut" : "18-0",
- *        "nombre" : "Administrador",
- *        "aPaterno" : "Zbrands",
- *        "aMaterno" : "luuna",
- *        "perfil" : 1,
+ *        "name" : "Administrador",
+ *        "lastName" : "Zbrands",
+ 
+ *        "profile" : 1,
  *        "email" : "jtest@gmail.com",
  *        "password" : "adm1234",
  *        "__v": 0
@@ -199,23 +199,23 @@ exports.findBy = async (req, res) => {
 }
 
 /**
- * @api {post} /findAll Lista los Usuarios
+ * @api {post} / List Users
  * @apiVersion 0.0.1
- * @apiName Usuario
- * @apiGroup Usuario
+ * @apiName Users
+ * @apiGroup Users
  * @apiPermission none
  *
- * @apiDescription Se encarga de listar todos los Usuario
+ * @apiDescription It is in charge of listing all the Users
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *      [{
  *           "_id": "605e9d2dd0eaaa0033c68b41",
  *           "rut" : "18-0",
- *           "nombre" : "Administrador",
- *           "aPaterno" : "Zbrands",
- *           "aMaterno" : "luuna",
- *           "perfil" : 1,
+ *           "name" : "Administrador",
+ *           "lastName" : "Zbrands",
+ *  
+ *           "profile" : 1,
  *           "email" : "jtest@gmail.com",
  *           "password": "$2a$08$tnPC5JA0rGYie8OqoWsiLuujczZKlvjH.JLbYOVsYf/43HSt8x.SC",
  *           "tokens": [{
@@ -226,10 +226,10 @@ exports.findBy = async (req, res) => {
  *       }, {
  *           "_id": "605e89e500c6cc003359fcf0",
  *           "rut" : "15-0",
- *           "nombre" : "Administrador",
- *           "aPaterno" : "Zbrands",
- *           "aMaterno" : "luuna",
- *           "perfil" : 1,
+ *           "name" : "Administrador",
+ *           "lastName" : "Zbrands",
+ *  
+ *           "profile" : 1,
  *           "email" : "anonym@test.cl",
  *           "password": "$2a$08$rFIXdn3s1M9A5IiMmh7FHeqPR1Gpo150E6Rui3hMI0Yk3KlQ7imCq",
  *           "tokens": [{

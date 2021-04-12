@@ -4,7 +4,7 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 /**
- * Se establece la conexion con la base de datos
+ * The connection with the database is established
  */
 mongoose.connect('mongodb://localhost:27017/zebrans', {
     useNewUrlParser: true,

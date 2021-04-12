@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const UserModel = require('../models/user');
 /**
- * Metodo que se encarga de la autenticación del usuario en el sistema
+ * Method that is responsible for user authentication in the system
  * 
  * @param {*} req 
  * @param {*} res 

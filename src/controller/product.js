@@ -1,20 +1,21 @@
+const UserModel = require('../models/user');
 const ProductModel = require('../models/product');
 const TrackingModel = require('../models/tracking');
 
 /**
- * @apiDefine Producto Producto
+ * @apiDefine Products Products
  *
- * API necesaria para gestionar los productos.
+ * API required to manage the products.
  */
 
 /**
- * @api {post} /add Registrar un Producto
+ * @api {post} /add Register a Product
  * @apiPermission admin
  * @apiVersion v1
- * @apiName Producto
- * @apiGroup Producto 
+ * @apiName Products
+ * @apiGroup Products 
  *
- * @apiDescription Se encarga de registrar un producto del sistema.
+ * @apiDescription It is responsible for registering a product of the system.
  *
  * @apiParamExample {json} Request-Example:
  *   {
@@ -27,7 +28,7 @@ const TrackingModel = require('../models/tracking');
  * @apiSuccessExample {json} Success-Response:
  *   HTTP/1.1 200 OK
  *   {
- *      "message" : "Producto registrado correctamente"
+ *      "message" : "Product successfully registered"
  *   } 
  *
  */
@@ -36,7 +37,7 @@ exports.save = async (req, res) => {
     const model = req.body;
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).json({ message: 'You are not authorized to execute the action'});    
+        res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -44,46 +45,46 @@ exports.save = async (req, res) => {
             model['lastUserUpdate'] = req.user.email;
             const product = new ProductModel(model);
             product.save().then(data => {
-                res.status(201).json({
+                res.status(201).send({
                     message : 'Product successfully registered'
                 });
             }).catch(err => {
-                res.status(500).json({
+                res.status(500).send({
                     message: err.message || 'Error trying to save the product'
                 });
             });
         }else {
-            res.json({
+            res.send({
                 message : 'Product is already registered'
             });
         }
     }catch(e){
         console.log(e);
-        res.status(500).json({message : e.message});
+        res.status(500).send(e.message);
     }
 }
 
 /**
- * @api {put} /edit/1 Editar un Producto
+ * @api {put} /1 Edit a Product
  * @apiVersion v1
- * @apiName Producto
- * @apiGroup Producto
+ * @apiName Products
+ * @apiGroup Products
  * @apiPermission admin
  *
- * @apiDescription Se encarga de editar un producto del sistema.
+ * @apiDescription In charge of editing a system product.
  *
  * @apiParamExample {json} Request-Example:
  *   {
  *      "sku" : "1",
- *      "nombre": "uno",
- *      "marca" : "marca uno",
- *      "precio" : 1000
+ *      "name": "uno",
+ *      "brand" : "marca uno",
+ *      "price" : 1000
  *   }
  * 
  * @apiSuccessExample {json} Success-Response:
  *   HTTP/1.1 200 OK
  *   {
- *      "message" : "Producto editado correctamente"
+ *      "message" : "Product updated successfully"
  *   } 
  *
  */
@@ -92,7 +93,7 @@ exports.save = async (req, res) => {
     const model = req.body;
 
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).json({ message: 'You are not authorized to execute the action'});    
+        res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -101,35 +102,35 @@ exports.save = async (req, res) => {
         await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
             new: true
         });
-        res.json({message : 'Product updated successfully'});
+        res.send({message : 'Product updated successfully'});
     }catch(e){
         console.log(e);
-        res.status(500).json({message : e.message});
+        res.status(500).send(e.message);
     }
 }
 
 /**
- * @api {delete} /delete/1 Eliminar Producto
+ * @api {delete} /1 Delete Product
  * @apiVersion v1
- * @apiName Producto
- * @apiGroup Producto
+ * @apiName Products
+ * @apiGroup Products
  * @apiPermission admin
  *
- * @apiDescription Se encarga de eliminar un producto del sistema.
+ * @apiDescription It is responsible for removing a product from the system.
  *
- * @apiQuery {String} sku SKU del producto
+ * @apiQuery {String} sku SKU of product
  *
  * @apiSuccessExample {json} Success-Response:
  *   HTTP/1.1 200 OK
  *   {
- *      "message" : "Producto eliminado correctamente"
+ *      "message" : "Product SKU 1 was successfully removed"
  *   } 
  *
  */
  exports.delete = async (req, res) => {
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).json({ message: 'You are not authorized to execute the action'});    
+        res.status(401).send({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -139,30 +140,30 @@ exports.save = async (req, res) => {
         }, {
             new: true
         });
-        res.json({message : `Product ${product.sku} was successfully removed`});
+        res.send({message : `Product SKU ${product.sku} was successfully removed`});
     }catch(e){
         console.log(e);
-        res.status(500).json({message : e.message});
+        res.status(500).send(e);
     }
 }
 
 /**
- * @api {get} /findBy/sku/1 Busca un Producto
+ * @api {get} /sku/1 Find a Product
  * @apiVersion v1
- * @apiName Producto
- * @apiGroup Producto
+ * @apiName Products
+ * @apiGroup Products
  * @apiPermission none
  *
- * @apiDescription Se encarga de buscar un producto por algun parametro indicado
+ * @apiDescription It is in charge of looking for a product by some indicated parameter
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {
  *        "_id": "605e9d2dd0eaaa0033c68b41",
  *        "sku": "2",
- *        "nombre": "dos",
- *        "marca": "marca Dos",
- *        "precio": 2000,
+ *        "name": "dos",
+ *        "brand": "marca Dos",
+ *        "price": 2000,
  *        "__v": 0
  *     }
  *
@@ -184,42 +185,42 @@ exports.findBy = async (req, res) => {
                 tracking.save();
             }
             
-            res.json(product);
+            res.send(product);
         }else {
-            res.status(500).json({
+            res.status(500).send({
                 message: 'Prouct not found.'
-            });
+            })
         }
     }catch(e){
         console.log(e);
-        res.status(500).json({message : e.message});
+        res.status(500).send(e.message);
     }
 }
 
 /**
- * @api {get} /findAll Lista los Producto
+ * @api {get} / Product List
  * @apiVersion v1
- * @apiName Producto
- * @apiGroup Producto
+ * @apiName Products
+ * @apiGroup Products
  * @apiPermission none
  *
- * @apiDescription Se encarga de listar todos los producto
+ * @apiDescription It is in charge of listing all the products
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *      [{
  *           "_id": "605e9d2dd0eaaa0033c68b41",
  *           "sku": "2",
- *           "nombre": "dos",
- *           "marca": "marca Dos",
- *           "precio": 2000,
+ *           "name": "dos",
+ *           "brand": "marca Dos",
+ *           "price": 2000,
  *           "__v": 0
  *       }, {
  *           "_id": "605ea5a35bd2140033baa82c",
  *           "sku": "1",
- *           "nombre": "uno",
- *           "marca": "marca uno",
- *           "precio": 1000,
+ *           "name": "uno",
+ *           "brand": "marca uno",
+ *           "price": 1000,
  *           "__v": 0
  *       }]
  *
@@ -233,9 +234,9 @@ exports.findAll = async (req, res) => {
             };
         }
         const products = await ProductModel.find(filter).exec();
-        res.json(products);
+        res.send(products);
     }catch(e){
         console.log(e);
-        res.status(500).json({message : e.message});
+        res.status(500).send(e.message);
     }
 }

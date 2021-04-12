@@ -3,29 +3,29 @@ const TrackingModel = require('../models/tracking');
 /**
  * @apiDefine Tracking Tracking
  *
- * API necesaria para registrar eventos.
+ * API required to register events.
  */
 
 /**
- * @api {post} /tracking Registrar un evento
+ * @api {post} /tracking Register an event
  * @apiVersion 0.0.1
  * @apiName Tracking
  * @apiGroup Tracking
  * @apiPermission none
  *
- * @apiDescription Se encarga de registrar una accion ejecutada en el sistema.
+ * @apiDescription It is responsible for recording an action executed in the system.
  *
  * @apiParamExample {json} Request-Example:
  *   {
- *      "nombre" : "Consulta Producto",
- *      "codigo": 100,
+ *      "name" : "Consulta Producto",
+ *      "code": 100,
  *      "sku" : 1
  *   }
  * 
  * @apiSuccessExample {json} Success-Response:
  *   HTTP/1.1 200 OK
  *   {
- *      "message" : "Registro guardado correctamente"
+ *      "message" : "Tracking successfully registered"
  *   } 
  *
  */
@@ -43,13 +43,13 @@ const TrackingModel = require('../models/tracking');
 }
 
 /**
- * @api {get} /findAll Lista los Registros de actividad
+ * @api {get} / List Activity Logs
  * @apiVersion 0.0.1
  * @apiName Tracking
  * @apiGroup Trackings
  * @apiPermission none
  *
- * @apiDescription Se encarga de listar todos los registros de actividad
+ * @apiDescription It is responsible for listing all activity logs
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
