@@ -37,7 +37,7 @@ exports.save = async (req, res) => {
     const model = req.body;
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -45,22 +45,15 @@ exports.save = async (req, res) => {
             model['lastUserUpdate'] = req.user.email;
             const product = new ProductModel(model);
             product.save().then(data => {
-                res.status(201).send({
-                    message : 'Product successfully registered'
-                });
+                res.status(201).json({message : 'Product successfully registered'});
             }).catch(err => {
-                res.status(500).send({
-                    message: err.message || 'Error trying to save the product'
-                });
+                res.status(500).json({message: err.message || 'Error trying to save the product'});
             });
         }else {
-            res.send({
-                message : 'Product is already registered'
-            });
+            res.status(500).json({message : 'Product is already registered'});
         }
     }catch(e){
-        console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -93,19 +86,23 @@ exports.save = async (req, res) => {
     const model = req.body;
 
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({message: 'You are not authorized to execute the action'});    
     }
     
     try{
         delete model.sku;
         model['lastUserUpdate'] = req.user.email;
-        await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
+        const product = await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
             new: true
         });
-        res.send({message : 'Product updated successfully'});
+        
+        if(product){
+            res.json({message : 'Product updated successfully'});
+        }else{
+            res.status(500).json({message : 'Product not found'});
+        }
     }catch(e){
-        console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -130,7 +127,7 @@ exports.save = async (req, res) => {
  exports.delete = async (req, res) => {
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -140,10 +137,14 @@ exports.save = async (req, res) => {
         }, {
             new: true
         });
-        res.send({message : `Product SKU ${product.sku} was successfully removed`});
+        if(product){
+            res.json({message : `Product SKU ${product.sku} was successfully removed`});
+        }else{
+            res.json({message : 'Product not found'});
+        }
+        
     }catch(e){
-        console.log(e);
-        res.status(500).send(e);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -170,30 +171,26 @@ exports.save = async (req, res) => {
  */
 exports.findBy = async (req, res) => {
     
-    let filtro = {};
-    filtro[req.params.atr] = 'price' === req.params.atr ? parseInt(req.params.valor) : req.params.valor;
-    
+    let filter = {};
+    filter[req.params.atr] = 'price' === req.params.atr ? parseInt(req.params.value) : req.params.value;
     try{
-        const product = await ProductModel.findOne(filtro).exec();
+        const product = await ProductModel.findOne(filter).exec();
         if(product){
             if(req.user.profile && req.user.profile !== 1){
                 const tracking = new TrackingModel({ 
-                    name: 'Consulta Produto', 
+                    name: 'Find Product', 
                     code: 100, 
                     sku: product.sku
                 });
                 tracking.save();
             }
             
-            res.send(product);
+            res.json(product);
         }else {
-            res.status(500).send({
-                message: 'Prouct not found.'
-            })
+            res.status(500).json({message: 'Prouct not found.'});
         }
     }catch(e){
-        console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -234,9 +231,8 @@ exports.findAll = async (req, res) => {
             };
         }
         const products = await ProductModel.find(filter).exec();
-        res.send(products);
+        res.json(products);
     }catch(e){
-        console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }

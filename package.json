@@ -10,15 +10,28 @@
   "scripts": {
     "start": "node src/index.js",
     "document": "apidoc -i src/ -o doc/",
-    "dev": "node src/index.js",
-    "start-nodemon": "env-cmd -f ./.env nodemon src / app.js apidoc -i src/ -o doc/"
+    "dev": "nodemon src/index.js",
+    "start-nodemon": "env-cmd -f ./.env nodemon src / app.js apidoc -i src/ -o doc/",
+    "test": "mocha tests/api.test.js --exit",
+    "test-user": "mocha tests/users.test.js --exit",
+    "test-product": "mocha tests/products.test.js --exit"
   },
-  "keywords": ["nodejs", "express", "nodemon", "docker", "docker-compose", "mongoose", "morgan", "jsonwebtoken", "nodemailer"],
+  "keywords": [
+    "nodejs",
+    "express",
+    "nodemon",
+    "docker",
+    "docker-compose",
+    "mongoose",
+    "morgan",
+    "jsonwebtoken",
+    "nodemailer"
+  ],
   "author": "Juan Pablo Rodriguez",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -30,6 +43,8 @@
   },
   "devDependencies": {
     "@types/apidoc": "^0.22.2",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "mocha": "^8.3.2",
+    "supertest": "^6.1.3"
   }
 }
