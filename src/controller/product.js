@@ -175,7 +175,7 @@ exports.findBy = async (req, res) => {
         if(product){
             if(req.user.profile && req.user.profile !== 1){
                 const tracking = new TrackingModel({ 
-                    name: 'Consulta Produto', 
+                    name: 'Find Product', 
                     code: 100, 
                     sku: product.sku
                 });
