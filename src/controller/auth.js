@@ -46,12 +46,12 @@ const UserModel = require('../models/user');
  **/
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body
-        const user = await UserModel.findByCredentials(email, password)
+        const { email, password } = req.body;
+        const user = await UserModel.findByCredentials(email, password);
         if (!user) {
            return res.status(401).json({error: 'Login failed!! Verify your credentials'});
         }
-        const token = await user.generateAuthToken()
+        const token = await user.generateAuthToken();
         res.json({ user, token });
      } catch (error) {
         res.status(400).json(error);
@@ -71,9 +71,9 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
-            return token.token != req.token
+            return token.token != req.token;
         })
-        await req.user.save()
+        await req.user.save();
         res.json();
     } catch (error) {
         res.status(500).json(error)
@@ -104,9 +104,9 @@ exports.logout = async (req, res) => {
  **/
 exports.logoutAll = async (req, res) => {
     try {
-        req.user.tokens.splice(0, req.user.tokens.length)
+        req.user.tokens.splice(0, req.user.tokens.length);
         await req.user.save();
-        res.json({message : 'All sessions was deleted'})
+        res.json({message : 'All sessions was deleted'});
     } catch (error) {
         res.status(500).json(error);
     }

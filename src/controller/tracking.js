@@ -88,7 +88,6 @@ exports.findAll = async (req, res) => {
         const tracking = await TrackingModel.find({}).exec();
         res.json(tracking);
     }catch(e){
-        console.log(e);
         res.status(500).json({message : e.message});
     }
 }

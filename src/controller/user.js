@@ -180,12 +180,12 @@ exports.findBy = async (req, res) => {
         res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     
-    let filtro = {};
+    let filter = {};
     
-    filtro[req.params.atr] = 'perfil' === req.params.atr ? parseInt(req.params.value) : req.params.value;
+    filter[req.params.atr] = 'perfil' === req.params.atr ? parseInt(req.params.value) : req.params.value;
     
     try{
-        const user = await UserModel.findOne(filtro).exec();
+        const user = await UserModel.findOne(filter).exec();
         if(user){
             res.json(user);
         }else {

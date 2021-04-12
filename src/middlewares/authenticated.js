@@ -18,9 +18,9 @@ const auth = async(req, res, next) => {
             }
             req.user = user;
             req.token = token;
-            next()
+            next();
         } catch (error) {
-            res.status(401).json({ message: 'You are not authorized to execute the action' })
+            res.status(401).json({ message: 'You are not authorized to execute the action' });
         }
     }else{
         res.status(401).json({message: 'You must log in'});
