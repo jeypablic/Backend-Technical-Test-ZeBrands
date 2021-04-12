@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 /**
- * Funcion que se encarga de enviar una notificación via email.
+ * Function that is responsible for sending a notification via email.
  * 
  * @param {*} to to
  * @param {*} message Message to send

@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 
 var model = mongoose.Schema({
     name: {
-        desc: "Nombre Acción.",
+        desc: "Name Action",
         trim: true,
         type: String
     },
     code: {
-        desc: "Código Acción",
+        desc: "Code Action",
         type: Number
     },
     sku: {
-        desc: 'Sku del producto quien gatilla el tracking',
+        desc: 'Product sku who triggers the tracking',
         trim: true,
         type: String
     },

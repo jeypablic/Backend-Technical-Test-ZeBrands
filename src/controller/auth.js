@@ -3,17 +3,17 @@ const UserModel = require('../models/user');
 /**
  * @apiDefine Login Login
  *
- * API necesaria para gestionar login en la aplicación.
+ * API necessary to manage login in the application.
  */
 
 /**
- * @api {post} /login Inicio de sesión en el sistema
+ * @api {post} /login Login to the system
  * @apiVersion 0.0.1
  * @apiName Login
  * @apiGroup Login
  * @apiPermission none
  *
- * @apiDescription Se encarga de iniciar la sesión del usuario en el sistema
+ * @apiDescription It is responsible for logging the user into the system
  * 
  * @apiParamExample {json} Request-Example:
  *   {
@@ -27,10 +27,9 @@ const UserModel = require('../models/user');
  *        "user": {
  *          "_id": "605eae55146c98003337153a",
  *          "rut": "18-0",
- *          "nombre": "Administrador",
- *          "aPaterno": "Zbrands",
- *          "aMaterno": "luuna",
- *          "perfil": 1,
+ *          "name": "Administrador",
+ *          "lastName": "Zbrands luuna",
+ *          "profile": 1,
  *          "email": "juanpablo.rodriguezyanez@gmail.com",
  *          "password": "$2a$08$DT2QK6OGoedYE/aXpAziu.I6R3xzZJRRnBs00zOz1ZNk2.IUCgmNm",
  *          "tokens": [{
@@ -60,13 +59,13 @@ exports.login = async (req, res) => {
 }
 
 /**
- * @api {post} /logout Cierre de sesion
+ * @api {post} /logout Log out
  * @apiVersion 0.0.1
  * @apiName Login
  * @apiGroup Login
  * @apiPermission none
  *
- * @apiDescription Se encarga de cerrar de la sesion del Usuario
+ * @apiDescription It is responsible for closing the User's session
  * 
  **/
 exports.logout = async (req, res) => {
@@ -82,13 +81,13 @@ exports.logout = async (req, res) => {
 }
 
 /**
- * @api {post} /logout-all Cierre de todas las sesiones
+ * @api {post} /logout-all Closure of all sessions
  * @apiVersion 0.0.1
  * @apiName Login
  * @apiGroup Login
  * @apiPermission none
  *
- * @apiDescription Se encarga de cerrar todas las sesiones iniciadas
+ * @apiDescription It is responsible for closing all started sessions
  * 
  * @apiParamExample {json} Request-Example:
  *   {
