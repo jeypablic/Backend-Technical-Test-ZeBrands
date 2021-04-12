@@ -67,7 +67,7 @@ describe("/products", () => {
 
         it("respond with code 500 when product not found", (done) => {
             request(app)
-                .get(`/api/${process.env.VERSION_API}/products/sku/1`)
+                .get(`/api/${process.env.VERSION_API}/products/sku/11`)
                 .set('Accept', 'application/json')
                 .set('Authorization', 'Bearer ' + tokenId)
                 .expect('Content-Type', /json/)
@@ -85,12 +85,24 @@ describe("/products", () => {
             .get(`/api/${process.env.VERSION_API}/products`)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
+            .set('Authorization', 'Bearer ' + tokenId)
             .expect(200)
             .end(err => {
                 if(err) return done(err);
                 done();
             });;
         });
+        it("respond with code 401 where are not autorized", (done) => {
+            request(app)
+              .get(`/api/${process.env.VERSION_API}/products`)
+              .set('Accept', 'application/json')
+              .expect('Content-Type', /json/)
+              .expect(401)
+              .end(err => {
+                  if(err) return done(err);
+                  done();
+              });;
+          });
     });
 
     describe("POST /", () =>{

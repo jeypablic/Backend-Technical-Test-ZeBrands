@@ -37,7 +37,7 @@ exports.save = async (req, res) => {
     const model = req.body;
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).json({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -45,18 +45,12 @@ exports.save = async (req, res) => {
             model['lastUserUpdate'] = req.user.email;
             const product = new ProductModel(model);
             product.save().then(data => {
-                res.status(201).json({
-                    message : 'Product successfully registered'
-                });
+                res.status(201).json({message : 'Product successfully registered'});
             }).catch(err => {
-                res.status(500).json({
-                    message: err.message || 'Error trying to save the product'
-                });
+                res.status(500).json({message: err.message || 'Error trying to save the product'});
             });
         }else {
-            res.json({
-                message : 'Product is already registered'
-            });
+            res.status(500).json({message : 'Product is already registered'});
         }
     }catch(e){
         res.status(500).json({message : e.message});
@@ -92,16 +86,21 @@ exports.save = async (req, res) => {
     const model = req.body;
 
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).json({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({message: 'You are not authorized to execute the action'});    
     }
     
     try{
         delete model.sku;
         model['lastUserUpdate'] = req.user.email;
-        await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
+        const product = await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
             new: true
         });
-        res.json({message : 'Product updated successfully'});
+        
+        if(product){
+            res.json({message : 'Product updated successfully'});
+        }else{
+            res.status(500).json({message : 'Product not found'});
+        }
     }catch(e){
         res.status(500).json({message : e.message});
     }
@@ -128,7 +127,7 @@ exports.save = async (req, res) => {
  exports.delete = async (req, res) => {
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).json({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -138,7 +137,12 @@ exports.save = async (req, res) => {
         }, {
             new: true
         });
-        res.json({message : `Product SKU ${product.sku} was successfully removed`});
+        if(product){
+            res.json({message : `Product SKU ${product.sku} was successfully removed`});
+        }else{
+            res.json({message : 'Product not found'});
+        }
+        
     }catch(e){
         res.status(500).json({message : e.message});
     }
@@ -169,7 +173,6 @@ exports.findBy = async (req, res) => {
     
     let filter = {};
     filter[req.params.atr] = 'price' === req.params.atr ? parseInt(req.params.value) : req.params.value;
-    
     try{
         const product = await ProductModel.findOne(filter).exec();
         if(product){
@@ -184,9 +187,7 @@ exports.findBy = async (req, res) => {
             
             res.json(product);
         }else {
-            res.status(500).json({
-                message: 'Prouct not found.'
-            });
+            res.status(500).json({message: 'Prouct not found.'});
         }
     }catch(e){
         res.status(500).json({message : e.message});

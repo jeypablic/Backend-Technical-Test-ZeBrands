@@ -177,7 +177,7 @@ exports.save = async (req, res) => {
 exports.findBy = async (req, res) => {
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).json({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({message: 'You are not authorized to execute the action'});    
     }
     
     let filter = {};
@@ -189,9 +189,7 @@ exports.findBy = async (req, res) => {
         if(user){
             res.json(user);
         }else {
-            res.status(500).json({
-                message: 'User not found.'
-            });
+            res.status(500).json({message: 'User not found.'});
         }
     }catch(e){
         res.status(500).json({message : e.message});
