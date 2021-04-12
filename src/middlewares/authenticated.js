@@ -20,10 +20,10 @@ const auth = async(req, res, next) => {
             req.token = token;
             next()
         } catch (error) {
-            res.status(401).send({ error: 'You are not authorized to execute the action' })
+            res.status(401).json({ message: 'You are not authorized to execute the action' })
         }
     }else{
-        res.status(401).send({message: 'You must log in'});
+        res.status(401).json({message: 'You must log in'});
     }
 }
 module.exports = auth;

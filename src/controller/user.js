@@ -37,7 +37,7 @@ exports.save = async (req, res) => {
     const model = req.body;
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -46,18 +46,15 @@ exports.save = async (req, res) => {
             user = new UserModel(model);
             await user.save();
             const token = await user.generateAuthToken();
-            res.status(201).send({
-                message : 'User successfully registered',
-                user,
-                token
+            res.status(201).json({
+                message : 'User successfully registered'
             });
         }else {
-            res.status(500).send('User is already registered');
+            res.status(500).json({message: 'User is already registered'});
         }
         
     }catch(e){
-        console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message: e.message});
     }
 }
 
@@ -93,7 +90,7 @@ exports.save = async (req, res) => {
     const model = req.body;
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -102,9 +99,14 @@ exports.save = async (req, res) => {
         const user = await UserModel.findOneAndUpdate({rut : req.params.rut}, model, {
             new: true
         });
-        res.send({message : 'User updated successfully'});
+        if(user){
+            res.json({message : 'User updated successfully'});
+        }else{
+            res.status(500).json({message: 'User not found'});
+        }
+        
     }catch(e){
-        res.status(500).send(e);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -128,7 +130,7 @@ exports.save = async (req, res) => {
  */
  exports.delete = async (req, res) => {
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     try{
         const user = await UserModel.findOneAndUpdate({rut : req.params.rut}, {
@@ -137,10 +139,14 @@ exports.save = async (req, res) => {
         }, {
             new: true
         });
-        res.send({message : `User ${user.rut} was successfully removed`});
+        if(user){
+            res.json({message : `User ${user.rut} was successfully removed`});
+        }else{
+            res.status(500).json({message: 'User not found'});
+        }
+        
     }catch(e){
-        console.log(e);
-        res.status(500).send(e);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -171,25 +177,24 @@ exports.save = async (req, res) => {
 exports.findBy = async (req, res) => {
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     
     let filtro = {};
     
-    filtro[req.params.atr] = 'perfil' === req.params.atr ? parseInt(req.params.valor) : req.params.valor;
+    filtro[req.params.atr] = 'perfil' === req.params.atr ? parseInt(req.params.value) : req.params.value;
     
     try{
         const user = await UserModel.findOne(filtro).exec();
         if(user){
-            res.send(user);
+            res.json(user);
         }else {
-            res.status(500).send({
+            res.status(500).json({
                 message: 'User not found.'
-            })
+            });
         }
     }catch(e){
-        console.log(e);
-        res.status(500).send(e);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -237,9 +242,8 @@ exports.findBy = async (req, res) => {
 exports.findAll = async (req, res) => {
     try{
         const users = await UserModel.find({}).exec();
-        res.send(users);
+        res.json(users);
     }catch(e){
-        console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }

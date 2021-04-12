@@ -50,12 +50,12 @@ exports.login = async (req, res) => {
         const { email, password } = req.body
         const user = await UserModel.findByCredentials(email, password)
         if (!user) {
-           return res.status(401).send({error: 'Login failed!! Verify your credentials'});
+           return res.status(401).json({error: 'Login failed!! Verify your credentials'});
         }
         const token = await user.generateAuthToken()
-        res.send({ user, token })
+        res.json({ user, token });
      } catch (error) {
-        res.status(400).send(error)
+        res.status(400).json(error);
      }
 }
 
@@ -75,9 +75,9 @@ exports.logout = async (req, res) => {
             return token.token != req.token
         })
         await req.user.save()
-        res.send()
+        res.json();
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).json(error)
     }
 }
 
@@ -106,9 +106,9 @@ exports.logout = async (req, res) => {
 exports.logoutAll = async (req, res) => {
     try {
         req.user.tokens.splice(0, req.user.tokens.length)
-        await req.user.save()
-        res.send({message : 'All sessions was deleted'})
+        await req.user.save();
+        res.json({message : 'All sessions was deleted'})
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).json(error);
     }
 }

@@ -96,11 +96,11 @@ model.methods.generateAuthToken = async function() {
 model.statics.findByCredentials = async (email, password) => {
     const user = await UserModel.findOne({email});
     if (!user) {
-        throw new Error({ error: 'Invalid Credentials' });
+        throw new Error({ message: 'Invalid Credentials' });
     }
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-        throw new Error({ error: 'Invalid Password' });
+        throw new Error({ message: 'Invalid Password' });
     }
     return user;
 }
