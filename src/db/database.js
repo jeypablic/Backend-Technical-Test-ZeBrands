@@ -6,7 +6,7 @@ mongoose.set('useCreateIndex', true);
 /**
  * Se establece la conexion con la base de datos
  */
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect('mongodb://localhost:27017/zebrans', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

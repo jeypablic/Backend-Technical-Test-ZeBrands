@@ -13,7 +13,8 @@
     "dev": "nodemon src/index.js",
     "start-nodemon": "env-cmd -f ./.env nodemon src / app.js apidoc -i src/ -o doc/",
     "test": "mocha tests/api.test.js --exit",
-    "test-user": "mocha tests/user.test.js --exit"
+    "test-user": "mocha tests/users.test.js --exit",
+    "test-product": "mocha tests/products.test.js --exit"
   },
   "keywords": [
     "nodejs",
