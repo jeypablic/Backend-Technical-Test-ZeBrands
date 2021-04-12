@@ -1,4 +1,3 @@
-const UserModel = require('../models/user');
 const ProductModel = require('../models/product');
 const TrackingModel = require('../models/tracking');
 
@@ -37,7 +36,7 @@ exports.save = async (req, res) => {
     const model = req.body;
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -45,22 +44,22 @@ exports.save = async (req, res) => {
             model['lastUserUpdate'] = req.user.email;
             const product = new ProductModel(model);
             product.save().then(data => {
-                res.status(201).send({
+                res.status(201).json({
                     message : 'Product successfully registered'
                 });
             }).catch(err => {
-                res.status(500).send({
+                res.status(500).json({
                     message: err.message || 'Error trying to save the product'
                 });
             });
         }else {
-            res.send({
+            res.json({
                 message : 'Product is already registered'
             });
         }
     }catch(e){
         console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -93,7 +92,7 @@ exports.save = async (req, res) => {
     const model = req.body;
 
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -102,10 +101,10 @@ exports.save = async (req, res) => {
         await ProductModel.findOneAndUpdate({sku : req.params.sku}, model, {
             new: true
         });
-        res.send({message : 'Product updated successfully'});
+        res.json({message : 'Product updated successfully'});
     }catch(e){
         console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -130,7 +129,7 @@ exports.save = async (req, res) => {
  exports.delete = async (req, res) => {
     
     if(req.user.profile && req.user.profile !== 1){
-        res.status(401).send({ message: 'You are not authorized to execute the action'});    
+        res.status(401).json({ message: 'You are not authorized to execute the action'});    
     }
     
     try{
@@ -140,10 +139,10 @@ exports.save = async (req, res) => {
         }, {
             new: true
         });
-        res.send({message : `Product ${product.sku} was successfully removed`});
+        res.json({message : `Product ${product.sku} was successfully removed`});
     }catch(e){
         console.log(e);
-        res.status(500).send(e);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -185,15 +184,15 @@ exports.findBy = async (req, res) => {
                 tracking.save();
             }
             
-            res.send(product);
+            res.json(product);
         }else {
-            res.status(500).send({
+            res.status(500).json({
                 message: 'Prouct not found.'
-            })
+            });
         }
     }catch(e){
         console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }
 
@@ -234,9 +233,9 @@ exports.findAll = async (req, res) => {
             };
         }
         const products = await ProductModel.find(filter).exec();
-        res.send(products);
+        res.json(products);
     }catch(e){
         console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }

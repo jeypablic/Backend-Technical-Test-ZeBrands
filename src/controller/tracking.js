@@ -38,7 +38,7 @@ const TrackingModel = require('../models/tracking');
 
     tracking.save(function (err, item) {
         if (err) return console.error(err);
-        res.send({menssage : 'Tracking successfully registered'});
+        res.json({menssage : 'Tracking successfully registered'});
     });
 }
 
@@ -86,9 +86,9 @@ const TrackingModel = require('../models/tracking');
 exports.findAll = async (req, res) => {
     try{
         const tracking = await TrackingModel.find({}).exec();
-        res.send(tracking);
+        res.json(tracking);
     }catch(e){
         console.log(e);
-        res.status(500).send(e.message);
+        res.status(500).json({message : e.message});
     }
 }
